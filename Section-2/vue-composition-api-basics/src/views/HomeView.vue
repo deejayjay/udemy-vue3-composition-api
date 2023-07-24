@@ -16,26 +16,20 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue';
 
-export default {
-  setup() {
-    const counter = ref(0);
+const counter = ref(0);
 
-    function increaseCounter() {
-      counter.value++;
-    }
+function increaseCounter() {
+  counter.value++;
+}
 
-    function decreaseCounter() {
-      if (counter.value === 0) {
-        return;
-      }
-      counter.value--;
-    }
-
-    return { counter, increaseCounter, decreaseCounter }
+function decreaseCounter() {
+  if (counter.value === 0) {
+    return;
   }
+  counter.value--;
 }
 </script>
 
