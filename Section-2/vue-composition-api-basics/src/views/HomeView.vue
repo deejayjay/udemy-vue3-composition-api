@@ -1,35 +1,50 @@
 <template>
+  <h1 class="app__title">{{ appTitle }}</h1>
   <div class="home">
-    <div>
+    <div class="counter__wrapper">
+      <h2 class="title">{{ counterData.title }}</h2>
       <button type="button"
               class="btn"
               @click="decreaseCounter">
         -
       </button>
-      <span class="counter">{{ counter }}</span>
+      <span class="counter">{{ counterData.count }}</span>
       <button type="button"
               class="btn"
               @click="increaseCounter">
         +
       </button>
+      <div class="edit__wrapper">
+        <label for="edit"
+               class="edit__label">Edit counter title:</label>
+        <input v-model="counterData.title"
+               type="text"
+               id="edit"
+               class="edit__control">
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { reactive } from 'vue';
 
-const counter = ref(0);
+const appTitle = 'My Awesome Counter App'
+
+const counterData = reactive({
+  count: 0,
+  title: 'My Counter',
+});
 
 function increaseCounter() {
-  counter.value++;
+  counterData.count++;
 }
 
 function decreaseCounter() {
-  if (counter.value === 0) {
+  if (counterData.count === 0) {
     return;
   }
-  counter.value--;
+  counterData.count--;
 }
 </script>
 
@@ -38,6 +53,30 @@ function decreaseCounter() {
   flex: 1;
   display: grid;
   place-items: center;
+}
+
+.edit__wrapper {
+  margin-top: 1rem;
+}
+
+.edit__label {
+  display: block;
+}
+
+.app__title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+.counter__wrapper {
+  text-align: center;
+}
+
+.title {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.5rem;
 }
 
 .btn,
