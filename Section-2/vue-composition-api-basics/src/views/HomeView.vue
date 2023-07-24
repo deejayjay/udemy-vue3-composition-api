@@ -3,17 +3,30 @@
   <div class="home">
     <div class="counter__wrapper">
       <h2 class="title">{{ counterData.title }}</h2>
-      <button type="button"
-              class="btn"
-              @click="decreaseCounter">
-        -
-      </button>
-      <span class="counter">{{ counterData.count }}</span>
-      <button type="button"
-              class="btn"
-              @click="increaseCounter">
-        +
-      </button>
+      <div>
+        <button type="button"
+                class="btn"
+                @click="decreaseCounter(2)">
+          --
+        </button>
+        <button type="button"
+                class="btn"
+                @click="decreaseCounter(1)">
+          -
+        </button>
+        <span class="counter">{{ counterData.count }}</span>
+        <button type="button"
+                class="btn"
+                @click="increaseCounter(1)">
+          +
+        </button>
+        <button type="button"
+                class="btn"
+                @click="increaseCounter(2)">
+          ++
+        </button>
+      </div>
+      <p>This counter is {{ oddOrEven }}</p>
       <div class="edit__wrapper">
         <label for="edit"
                class="edit__label">Edit counter title:</label>
@@ -27,7 +40,7 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive, computed, watch } from 'vue';
 
 const appTitle = 'My Awesome Counter App'
 
@@ -36,15 +49,23 @@ const counterData = reactive({
   title: 'My Counter',
 });
 
-function increaseCounter() {
-  counterData.count++;
+watch(() => counterData.count, (newCount, _oldCount) => {
+  if (newCount === 20) {
+    alert('Counter is at 20!');
+  }
+})
+
+const oddOrEven = computed(() => counterData.count % 2 !== 0 ? 'odd' : 'even');
+
+function increaseCounter(number) {
+  counterData.count += number;
 }
 
-function decreaseCounter() {
-  if (counterData.count === 0) {
+function decreaseCounter(number) {
+  if (counterData.count === 0 || counterData.count - number < 0) {
     return;
   }
-  counterData.count--;
+  counterData.count -= number;
 }
 </script>
 
