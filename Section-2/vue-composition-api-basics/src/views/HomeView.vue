@@ -17,22 +17,24 @@
 </template>
 
 <script>
+import { ref } from 'vue';
+
 export default {
-  data() {
-    return {
-      counter: 0
+  setup() {
+    const counter = ref(0);
+
+    function increaseCounter() {
+      counter.value++;
     }
-  },
-  methods: {
-    increaseCounter() {
-      this.counter++
-    },
-    decreaseCounter() {
-      if (this.counter === 0) {
-        return
+
+    function decreaseCounter() {
+      if (counter.value === 0) {
+        return;
       }
-      this.counter--
+      counter.value--;
     }
+
+    return { counter, increaseCounter, decreaseCounter }
   }
 }
 </script>
