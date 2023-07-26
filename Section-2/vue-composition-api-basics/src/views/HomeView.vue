@@ -40,9 +40,12 @@
 </template>
 
 <script setup>
-import { reactive, computed, watch } from 'vue';
+import { reactive, computed, watch, onMounted } from 'vue';
 
 const appTitle = 'My Awesome Counter App'
+onMounted(() => {
+  console.log("Do stuff related to appTitle");
+});
 
 const counterData = reactive({
   count: 0,
@@ -67,6 +70,10 @@ function decreaseCounter(number) {
   }
   counterData.count -= number;
 }
+
+onMounted(() => {
+  console.log("Do stuff related to counter");
+});
 </script>
 
 <style scoped>
