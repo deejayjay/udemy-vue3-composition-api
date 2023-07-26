@@ -33,19 +33,17 @@
         <input v-model="counterData.title"
                type="text"
                id="edit"
-               class="edit__control">
+               class="edit__control"
+               v-autofocus />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, computed, watch, onMounted } from 'vue';
+import { reactive, computed, watch } from 'vue';
 
 const appTitle = 'My Awesome Counter App'
-onMounted(() => {
-  console.log("Do stuff related to appTitle");
-});
 
 const counterData = reactive({
   count: 0,
@@ -71,9 +69,10 @@ function decreaseCounter(number) {
   counterData.count -= number;
 }
 
-onMounted(() => {
-  console.log("Do stuff related to counter");
-});
+// Directives
+// const vAutofocus = {
+//   mounted: (el) => el.focus()
+// }
 </script>
 
 <style scoped>
