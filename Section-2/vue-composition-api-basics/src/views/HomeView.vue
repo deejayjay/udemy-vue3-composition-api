@@ -33,8 +33,7 @@
         <input v-model="counterData.title"
                type="text"
                id="edit"
-               class="edit__control"
-               v-autofocus />
+               class="edit__control">
       </div>
     </div>
   </div>
@@ -68,11 +67,6 @@ function decreaseCounter(number) {
   }
   counterData.count -= number;
 }
-
-// Directives
-// const vAutofocus = {
-//   mounted: (el) => el.focus()
-// }
 </script>
 
 <style scoped>
