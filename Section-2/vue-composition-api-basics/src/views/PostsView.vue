@@ -2,12 +2,35 @@
   <div class="posts">
     <h1>Posts</h1>
     <ul>
-      <li v-for="postId in 3">
-        <RouterLink :to="`/posts/${postId}`">Post {{ postId }}</RouterLink>
+      <li v-for="post in posts"
+          :key="post.id">
+        <RouterLink :to="`/posts/${post.id}`">{{ post.title }}</RouterLink>
       </li>
     </ul>
   </div>
 </template>
+
+<script setup>
+import { ref } from 'vue';
+
+const posts = ref([
+  {
+    id: 1,
+    title: 'My first post',
+    body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.'
+  },
+  {
+    id: 2,
+    title: 'My second post',
+    body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.'
+  },
+  {
+    id: 3,
+    title: 'My third post',
+    body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.'
+  }
+]);
+</script>
 
 <style scoped>
 .posts {

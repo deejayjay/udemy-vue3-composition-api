@@ -1,5 +1,6 @@
 <template>
-  <h1 class="app__title">{{ appTitle }}</h1>
+  <h1 ref="appTitleRef"
+      class="app__title">{{ appTitle }}</h1>
   <div class="home">
     <div class="counter__wrapper">
       <h2 class="title">{{ counterData.title }}</h2>
@@ -14,7 +15,8 @@
                 @click="decreaseCounter(1)">
           -
         </button>
-        <span class="counter">{{ counterData.count }}</span>
+        <span class="counter"
+              id="counter">{{ counterData.count }}</span>
         <button type="button"
                 class="btn"
                 @click="increaseCounter(1)">
@@ -40,9 +42,13 @@
 </template>
 
 <script setup>
-import { reactive, computed, watch } from 'vue';
+import { reactive, computed, watch, ref, onMounted, nextTick } from 'vue';
 
 const appTitle = 'My Awesome Counter App'
+const appTitleRef = ref(null);
+onMounted(() => {
+  console.log(appTitleRef.value);
+});
 
 const counterData = reactive({
   count: 0,
@@ -57,8 +63,13 @@ watch(() => counterData.count, (newCount, _oldCount) => {
 
 const oddOrEven = computed(() => counterData.count % 2 !== 0 ? 'odd' : 'even');
 
-function increaseCounter(number) {
+async function increaseCounter(number) {
   counterData.count += number;
+  console.log(`Counter before DOM update: ${document.getElementById('counter').textContent}`);
+
+  await nextTick(() => {
+    console.log(`Counter after DOM update: ${document.getElementById('counter').textContent}`);
+  });
 }
 
 function decreaseCounter(number) {
