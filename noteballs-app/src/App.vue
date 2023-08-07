@@ -1,11 +1,10 @@
+<script setup>
+import NavBar from '@/components/layouts/NavBar.vue';
+</script>
+
 <template>
-  <ul>
-    <li>
-      <RouterLink to="/">Notes</RouterLink>
-    </li>
-    <li>
-      <RouterLink to="/stats">Stats</RouterLink>
-    </li>
-  </ul>
-  <RouterView />
+  <NavBar />
+  <div class="container is-max-widescreen px-2 py-4">
+    <RouterView />
+  </div>
 </template>
