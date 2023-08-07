@@ -3,28 +3,28 @@
       class="app__title">{{ appTitle }}</h1>
   <div class="home">
     <div class="counter__wrapper">
-      <h2 class="title">{{ counterData.title }}</h2>
+      <h2 class="title">{{ title }}</h2>
       <div>
         <button type="button"
                 class="btn"
-                @click="decreaseCounter(2)">
+                @click="decreaseCount(2)">
           --
         </button>
         <button type="button"
                 class="btn"
-                @click="decreaseCounter(1)">
+                @click="decreaseCount(1)">
           -
         </button>
         <span class="counter"
-              id="counter">{{ counterData.count }}</span>
+              id="counter">{{ count }}</span>
         <button type="button"
                 class="btn"
-                @click="increaseCounter(1)">
+                @click="increaseCount(1)">
           +
         </button>
         <button type="button"
                 class="btn"
-                @click="increaseCounter(2)">
+                @click="increaseCount(2)">
           ++
         </button>
       </div>
@@ -32,7 +32,7 @@
       <div class="edit__wrapper">
         <label for="edit"
                class="edit__label">Edit counter title:</label>
-        <input v-model="counterData.title"
+        <input v-model="title"
                type="text"
                id="edit"
                class="edit__control">
@@ -43,18 +43,22 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-
-import { useCounter } from '@/use/useCounter'
+import { useCounterStore } from '../stores/counter';
+import { storeToRefs } from 'pinia';
 
 const appTitle = 'My Awesome Counter App'
 const appTitleRef = ref(null);
+
+// Counter Store
+const store = useCounterStore();
+const { count, title, oddOrEven } = storeToRefs(store);
+const { increaseCount, decreaseCount } = store;
 
 onMounted(() => {
   console.log(appTitleRef.value);
 });
 
-// Counter
-const { counterData, oddOrEven, increaseCounter, decreaseCounter } = useCounter();
+
 </script>
 
 <style scoped>

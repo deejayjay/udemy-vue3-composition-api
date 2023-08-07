@@ -11,14 +11,19 @@
     <button type="button"
             class="counter-button"
             :class="{ 'green': oddOrEven === 'even' }"
-            @click="increaseCounter(1)">{{ counterData.count }}</button>
+            @click="increaseCount(1)">{{ count }}</button>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 
-import { useCounter } from '@/use/useCounter'
+import { useCounterStore } from '../stores/counter';
+import { storeToRefs } from 'pinia';
+
+const store = useCounterStore();
+const { count, oddOrEven } = storeToRefs(store);
+const { increaseCount } = store;
 
 const posts = ref([
   {
@@ -37,9 +42,6 @@ const posts = ref([
     body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.'
   }
 ]);
-
-// Counter
-const { counterData, increaseCounter, oddOrEven } = useCounter();
 </script>
 
 <style scoped>
