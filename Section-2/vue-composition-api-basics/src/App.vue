@@ -11,7 +11,9 @@
                   class="nav-link">About</RouterLink>
     </nav>
     <div class="user-data">
-      {{ userData.name }} <span class="username">@{{ userData.username }}</span>
+      {{ userData.name }} <span class="username">@{{ userData.username }}</span> |
+      <span class="network-status"
+            :class="{ 'online': online }">{{ online ? 'Online' : 'Offline' }}</span>
     </div>
   </header>
 
@@ -21,6 +23,9 @@
 <script setup>
 import { reactive, provide } from 'vue';
 import { RouterLink, RouterView } from 'vue-router'
+import { useOnline } from '@vueuse/core'
+
+const online = useOnline()
 
 // User data
 const userData = reactive({
@@ -37,6 +42,15 @@ provide("userData", userData);
   justify-content: space-between;
   border-bottom: 1px solid #ccc;
   padding: 1.5rem 1rem;
+}
+
+.network-status {
+  color: #6c6c6c;
+  transition: color 0.5s ease-in-out;
+}
+
+.online {
+  color: rgb(0, 180, 105);
 }
 
 .nav-link {

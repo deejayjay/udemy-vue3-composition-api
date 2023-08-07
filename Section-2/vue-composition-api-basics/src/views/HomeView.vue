@@ -42,42 +42,19 @@
 </template>
 
 <script setup>
-import { reactive, computed, watch, ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted } from 'vue';
+
+import { useCounter } from '@/use/useCounter'
 
 const appTitle = 'My Awesome Counter App'
 const appTitleRef = ref(null);
+
 onMounted(() => {
   console.log(appTitleRef.value);
 });
 
-const counterData = reactive({
-  count: 0,
-  title: 'My Counter',
-});
-
-watch(() => counterData.count, (newCount, _oldCount) => {
-  if (newCount === 20) {
-    alert('Counter is at 20!');
-  }
-})
-
-const oddOrEven = computed(() => counterData.count % 2 !== 0 ? 'odd' : 'even');
-
-async function increaseCounter(number) {
-  counterData.count += number;
-  console.log(`Counter before DOM update: ${document.getElementById('counter').textContent}`);
-
-  await nextTick(() => {
-    console.log(`Counter after DOM update: ${document.getElementById('counter').textContent}`);
-  });
-}
-
-function decreaseCounter(number) {
-  if (counterData.count === 0 || counterData.count - number < 0) {
-    return;
-  }
-  counterData.count -= number;
-}
+// Counter
+const { counterData, oddOrEven, increaseCounter, decreaseCounter } = useCounter();
 </script>
 
 <style scoped>
