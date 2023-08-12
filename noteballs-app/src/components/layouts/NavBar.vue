@@ -6,7 +6,6 @@ const showMobileNav = ref(false);
 const toggleMobileNav = () => {
   showMobileNav.value = !showMobileNav.value;
 };
-
 </script>
 
 <template>
@@ -36,12 +35,14 @@ const toggleMobileNav = () => {
         <div class="navbar-end">
           <RouterLink to="/"
                       class="navbar-item"
-                      active-class="is-active">
+                      active-class="is-active"
+                      @click="showMobileNav = false">
             Home
           </RouterLink>
           <RouterLink to="/stats"
                       class="navbar-item"
-                      active-class="is-active">
+                      active-class="is-active"
+                      @click="showMobileNav = false">
             Stats
           </RouterLink>
         </div>

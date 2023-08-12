@@ -1,62 +1,48 @@
 <script setup>
 import { ref } from 'vue';
 
+import { useNotesStore } from '@/stores/notes';
+import { storeToRefs } from 'pinia';
 import Note from '@/components/Notes/Note.vue';
+import AddEditNote from '@/components/Notes/AddEditNote.vue'
+
+// Notes Store
+const notesStore = useNotesStore();
+const { notes } = storeToRefs(notesStore);
+const { addNote } = notesStore;
 
 // Notes
-const notes = ref([]);
 const newNote = ref('');
-const newNoteRef = ref(null);
+const addEditNoteRef = ref(null);
 
 // Add the new note to notes array
 const addNoteHandler = () => {
-  if (newNote.value.trim() === '') {
-    return;
-  }
+  // Add the new note to notes array in Notes Store
+  addNote(newNote.value);
 
-  notes.value.unshift({
-    id: crypto.randomUUID(),
-    content: newNote.value
-  });
   newNote.value = '';
-  newNoteRef.value.focus();
-}
-
-// Delete the selected note from notes array
-const deleteNoteHandler = (id) => {
-  notes.value = notes.value.filter(note => note.id !== id);
+  addEditNoteRef.value.focusTextArea();
 }
 </script>
 
 <template>
   <div class="notes">
-    <form class="card has-background-primary-dark mb-4 p-4"
-          @submit.prevent="addNoteHandler">
-      <div class="field">
-        <label class="label has-text-white">New Note</label>
-        <div class="control">
-          <textarea v-model="newNote"
-                    ref="newNoteRef"
-                    class="textarea"
-                    placeholder="Add a new note" />
-        </div>
-      </div>
-
-      <div class="field is-grouped is-grouped-right">
-        <div class="control">
-          <button type="submit"
-                  class="button has-background-primary is-link"
-                  :disabled="newNote.trim() === ''">Add New Note</button>
-        </div>
-      </div>
-    </form>
+    <h2 class="title is-4">View Notes</h2>
+    <AddEditNote v-model="newNote"
+                 ref="addEditNoteRef"
+                 @handleSubmit="addNoteHandler">
+      <template #buttons>
+        <button type="submit"
+                class="button has-background-primary is-link"
+                :disabled="newNote.trim() === ''">Add New Note</button>
+      </template>
+    </AddEditNote>
 
     <ul v-if="notes.length"
         role="list">
       <Note v-for="note in notes"
             :note="note"
-            :key="note.id"
-            @delete-note="deleteNoteHandler" />
+            :key="note.id" />
     </ul>
     <p v-else>No notes yet! Please add some notes.</p>
   </div>
