@@ -1,11 +1,11 @@
 <script setup>
 import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
 
 import { useNotesStore } from '@/stores/notes';
-import { storeToRefs } from 'pinia';
-import Note from '@/components/Notes/Note.vue';
-import AddEditNote from '@/components/Notes/AddEditNote.vue'
 import { useWatchCharacters } from '../composables/watchCharacters'
+import Note from '../components/Notes/Note.vue';
+import AddEditNote from '../components/Notes/AddEditNote.vue'
 
 // Notes Store
 const notesStore = useNotesStore();

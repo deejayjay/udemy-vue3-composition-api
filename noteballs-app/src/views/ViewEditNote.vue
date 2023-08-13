@@ -2,18 +2,14 @@
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { useToast } from 'vue-toast-notification';
 
 import { useNotesStore } from '@/stores/notes';
-import AddEditNote from '@/components/Notes/AddEditNote.vue'
+import AddEditNote from '@/components/Notes/AddEditNote.vue';
 
 // Notes store
 const notesStore = useNotesStore();
 const { updateNoteById } = notesStore;
 const { getNoteContent } = storeToRefs(notesStore);
-
-// Toast
-const $toast = useToast();
 
 // Route & Router
 const $route = useRoute();
@@ -29,11 +25,6 @@ function updateNoteHandler() {
   updateNoteById(
     $route.params.id, noteContent.value
   );
-
-  $toast.success('The note has been updated successfully!', {
-    position: 'top',
-    duration: 3000,
-  });
 
   $router.push({ name: 'notes' });
 }

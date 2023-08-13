@@ -1,4 +1,12 @@
 import { defineStore } from "pinia";
+import { useToast } from 'vue-toast-notification';
+
+// Toast
+const $toast = useToast();
+const toastOptions = {
+  position: 'top',
+  duration: 3000,
+};
 
 export const useNotesStore = defineStore("notes", {
   state: () => ({
@@ -14,13 +22,18 @@ export const useNotesStore = defineStore("notes", {
         id: crypto.randomUUID(),
         content: newNoteContent.trim()
       });
+
+      $toast.success('The note has been added successfully!', toastOptions);
     },
     deleteNoteById(id) {
       this.notes = this.notes.filter(note => note.id !== id);
+      $toast.success('The note was deleted successfully!', toastOptions);
     },
     updateNoteById(id, newNoteContent) {
       const note = this.notes.find(note => note.id === id);
       note.content = newNoteContent.trim();
+
+      $toast.success('The note has been updated successfully!', toastOptions);
     }
   },
   getters: {
