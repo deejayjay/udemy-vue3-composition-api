@@ -1,19 +1,36 @@
-import { firestore } from "../js/firebase";
 import { defineStore } from "pinia";
 import { useToast } from "vue-toast-notification";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../js/firebase";
 
-// Toast
+// Toast Notifications
 const $toast = useToast();
 const toastOptions = {
   position: "top",
   duration: 3000
 };
 
+// Notes Store
 export const useNotesStore = defineStore("notes", {
   state: () => ({
     notes: []
   }),
   actions: {
+    getNotes() {
+      onSnapshot(collection(db, "notes"), (querySnapshot) => {
+        const notesFromDb = [];
+
+        querySnapshot.forEach((doc) => {
+          let note = {
+            id: doc.data().id,
+            content: doc.data().content
+          };
+
+          notesFromDb.push(note);
+        });
+        this.notes = notesFromDb;
+      });
+    },
     addNote(newNoteContent) {
       if (newNoteContent.trim() === "") {
         return;
