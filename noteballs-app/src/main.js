@@ -6,9 +6,13 @@ import 'vue-toast-notification/dist/theme-sugar.css';
 
 import App from './App.vue'
 import router from './router'
+import { vAutoFocus } from './directives/AutoFocus';
 
 const app = createApp(App);
 const pinia = createPinia();
+
+// Add global directives
+app.directive('auto-focus', vAutoFocus);
 
 app
   .use(VueToast)

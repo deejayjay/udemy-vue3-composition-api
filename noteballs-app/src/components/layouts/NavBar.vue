@@ -1,11 +1,23 @@
 <script setup>
 import { ref } from 'vue';
+import { onClickOutside } from '@vueuse/core';
 
 // Mobile Nav
 const showMobileNav = ref(false);
 const toggleMobileNav = () => {
   showMobileNav.value = !showMobileNav.value;
 };
+
+// Close nav when clicking outside
+const navRef = ref(null);
+const burgerRef = ref(null);
+onClickOutside(navRef, _event => {
+  if (showMobileNav.value) {
+    showMobileNav.value = false;
+  }
+}, {
+  ignore: [burgerRef]
+})
 </script>
 
 <template>
@@ -17,6 +29,7 @@ const toggleMobileNav = () => {
         <h1 class="navbar-item is-size-4 is-family-monospace">NoteBalls</h1>
 
         <a role="button"
+           ref="burgerRef"
            class="navbar-burger"
            :class="{ 'is-active': showMobileNav }"
            aria-label="menu"
@@ -30,6 +43,7 @@ const toggleMobileNav = () => {
       </div>
 
       <div id="navbarBasicExample"
+           ref="navRef"
            class="navbar-menu"
            :class="{ 'is-active': showMobileNav }">
         <div class="navbar-end">

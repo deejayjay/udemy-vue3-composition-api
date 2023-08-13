@@ -38,9 +38,11 @@ function focusTextArea() {
       <div class="control">
         <textarea :value="modelValue"
                   ref="noteContentRef"
-                  class="textarea"
                   :placeholder="placeholder"
-                  @input="$emit('update:modelValue', $event.target.value)" />
+                  @input="$emit('update:modelValue', $event.target.value)"
+                  v-auto-focus
+                  maxlength="100"
+                  class="textarea" />
       </div>
     </div>
 

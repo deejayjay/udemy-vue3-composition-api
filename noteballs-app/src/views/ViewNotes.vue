@@ -5,6 +5,7 @@ import { useNotesStore } from '@/stores/notes';
 import { storeToRefs } from 'pinia';
 import Note from '@/components/Notes/Note.vue';
 import AddEditNote from '@/components/Notes/AddEditNote.vue'
+import { useWatchCharacters } from '../composables/watchCharacters'
 
 // Notes Store
 const notesStore = useNotesStore();
@@ -14,6 +15,9 @@ const { addNote } = notesStore;
 // Notes
 const newNote = ref('');
 const addEditNoteRef = ref(null);
+
+// Watch characters in newNote
+useWatchCharacters(newNote);
 
 // Add the new note to notes array
 const addNoteHandler = () => {
