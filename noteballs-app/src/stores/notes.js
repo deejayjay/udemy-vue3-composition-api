@@ -1,6 +1,16 @@
 import { defineStore } from "pinia";
 import { useToast } from "vue-toast-notification";
-import { collection, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  addDoc,
+  serverTimestamp,
+  deleteDoc,
+  updateDoc,
+  query,
+  orderBy
+} from "firebase/firestore";
 import { db } from "../js/firebase";
 
 // Toast Notifications
@@ -10,25 +20,34 @@ const toastOptions = {
   duration: 3000
 };
 
+// Get a reference to the notes collection
+const notesCollectionRef = collection(db, "notes");
+
 // Notes Store
 export const useNotesStore = defineStore("notes", {
   state: () => ({
-    notes: []
+    notes: [],
+    notesLoaded: false
   }),
   actions: {
+    // This action is used in App.vue to get all the notes from firestore
     getNotes() {
-      onSnapshot(collection(db, "notes"), (querySnapshot) => {
+      this.notesLoaded = false;
+      const q = query(notesCollectionRef, orderBy("timestamp", "desc"));
+      onSnapshot(q, (querySnapshot) => {
         const notesFromDb = [];
 
         querySnapshot.forEach((doc) => {
           let note = {
-            id: doc.data().id,
-            content: doc.data().content
+            id: doc.id,
+            content: doc.data().content,
+            lastModifiedDate: new Date(doc.data().timestamp.seconds * 1000)
           };
 
           notesFromDb.push(note);
         });
         this.notes = notesFromDb;
+        this.notesLoaded = true;
       });
     },
     addNote(newNoteContent) {
@@ -36,22 +55,42 @@ export const useNotesStore = defineStore("notes", {
         return;
       }
 
-      this.notes.unshift({
-        id: crypto.randomUUID(),
-        content: newNoteContent.trim()
-      });
-
-      $toast.success("The note has been added successfully!", toastOptions);
+      // Add note to firestore & display toast notification if successful
+      addDoc(notesCollectionRef, {
+        content: newNoteContent.trim(),
+        timestamp: serverTimestamp()
+      })
+        .then(() => {
+          $toast.success("The note has been added successfully!", toastOptions);
+        })
+        .catch((error) => {
+          $toast.error(error.message, toastOptions);
+        });
     },
     deleteNoteById(id) {
-      this.notes = this.notes.filter((note) => note.id !== id);
-      $toast.success("The note was deleted successfully!", toastOptions);
+      deleteDoc(doc(notesCollectionRef, id))
+        .then(() => {
+          $toast.success("The note was deleted successfully!", toastOptions);
+        })
+        .catch((error) => {
+          $toast.error(error.message, toastOptions);
+        });
     },
     updateNoteById(id, newNoteContent) {
-      const note = this.notes.find((note) => note.id === id);
-      note.content = newNoteContent.trim();
-
-      $toast.success("The note has been updated successfully!", toastOptions);
+      // Update the document in firestore & display toast notification if successful
+      updateDoc(doc(notesCollectionRef, id), {
+        content: newNoteContent.trim(),
+        timestamp: serverTimestamp()
+      })
+        .then(() => {
+          $toast.success(
+            "The note has been updated successfully!",
+            toastOptions
+          );
+        })
+        .catch((error) => {
+          $toast.error(error.message, toastOptions);
+        });
     }
   },
   getters: {

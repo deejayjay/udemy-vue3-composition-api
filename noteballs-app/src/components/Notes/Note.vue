@@ -1,6 +1,7 @@
 <script setup>
 import { computed, reactive } from 'vue';
 import { RouterLink } from 'vue-router';
+import { formatDistance, subDays } from 'date-fns'
 
 import ModalDeleteNote from './ModalDeleteNote.vue';
 
@@ -21,6 +22,8 @@ const characterLength = computed(() => {
   return `${length} characters`
 });
 
+const distance = formatDistance(props.note.lastModifiedDate, new Date(), { addSuffix: true })
+
 // Delete Modal
 const modals = reactive({
   deleteNote: false
@@ -32,9 +35,16 @@ const modals = reactive({
       role="listitem">
     <div class="card-content">
       <div class="content">
-        {{ note.content }}
-        <div class="has-text-right has-text-grey-light mt-2">
-          <small>{{ characterLength }}</small>
+        <span class="is-size-4">{{ note.content }}</span>
+        <div
+             class="is-flex is-justify-content-space-between is-align-content-flex-start is-flex-wrap-wrap has-text-grey-light mt-2">
+          <div>
+            <div class="is-size-6">{{ note.lastModifiedDate.toLocaleString() }}</div>
+            <small>{{ distance }}</small>
+          </div>
+          <div class="has-text-right is-italic">
+            <small>{{ characterLength }}</small>
+          </div>
         </div>
       </div>
     </div>

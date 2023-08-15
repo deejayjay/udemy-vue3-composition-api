@@ -42,12 +42,19 @@ const addNoteHandler = () => {
       </template>
     </AddEditNote>
 
-    <ul v-if="notes.length"
+    <progress v-if="!notesStore.notesLoaded"
+              class="progress is-large is-info"
+              max="100" />
+    <ul v-if="notes && notes.length"
         role="list">
       <Note v-for="note in notes"
             :note="note"
             :key="note.id" />
     </ul>
-    <p v-else>No notes yet! Please add some notes.</p>
+    <div v-else
+         class="notification is-warning is-light is-size-6 is-family-monospace has-text-centered py-6">No notes yet!
+      Please add
+      some
+      notes.</div>
   </div>
 </template>
