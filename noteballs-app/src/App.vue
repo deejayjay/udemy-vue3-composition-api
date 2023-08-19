@@ -1,19 +1,26 @@
 <script setup>
 import { onMounted } from 'vue';
-import { useNotesStore } from './stores/notes';
+
+import { useAuthStore } from './stores/auth';
 import NavBar from '@/components/layouts/NavBar.vue';
 
-// Notes Store
-const notesStore = useNotesStore();
+// Auth Store
+const authStore = useAuthStore();
 
 onMounted(() => {
-  notesStore.getNotes();
+  authStore.initAuth();
 });
 </script>
 
 <template>
   <NavBar />
-  <div class="container is-max-widescreen px-2 py-4">
+  <main class="main container is-max-widescreen px-2 py-4">
     <RouterView />
-  </div>
+  </main>
 </template>
+
+<style scoped>
+.main {
+  height: calc(100vh - 3.25rem);
+}
+</style>
