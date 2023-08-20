@@ -45,25 +45,31 @@ export const useNotesStore = defineStore("notes", {
     getNotes() {
       this.notesLoaded = false;
 
-      unsubscribe = onSnapshot(notesQuery, (querySnapshot) => {
-        const notesFromDb = [];
+      unsubscribe = onSnapshot(
+        notesQuery,
+        (querySnapshot) => {
+          const notesFromDb = [];
 
-        querySnapshot.forEach((doc) => {
-          // If the source of the snapshot is from cache, then don't add it to the notes array
-          // This is used because the value of timestamp will be null if the source is from cache
-          if (!doc.metadata.hasPendingWrites) {
-            let note = {
-              id: doc.id,
-              content: doc.data().content,
-              lastModifiedDate: new Date(doc.data().timestamp?.seconds * 1000)
-            };
+          querySnapshot.forEach((doc) => {
+            // If the source of the snapshot is from cache, then don't add it to the notes array
+            // This is used because the value of timestamp will be null if the source is from cache
+            if (!doc.metadata.hasPendingWrites) {
+              let note = {
+                id: doc.id,
+                content: doc.data().content,
+                lastModifiedDate: new Date(doc.data().timestamp?.seconds * 1000)
+              };
 
-            notesFromDb.push(note);
-          }
-        });
-        this.notes = notesFromDb;
-        this.notesLoaded = true;
-      });
+              notesFromDb.push(note);
+            }
+          });
+          this.notes = notesFromDb;
+          this.notesLoaded = true;
+        },
+        (error) => {
+          console.error(error.message);
+        }
+      );
     },
     clearNotes() {
       this.notes = [];
