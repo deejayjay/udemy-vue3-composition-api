@@ -21,6 +21,6 @@ onMounted(() => {
 
 <style scoped>
 .main {
-  height: calc(100vh - 3.25rem);
+  min-height: calc(100vh - 3.25rem);
 }
 </style>

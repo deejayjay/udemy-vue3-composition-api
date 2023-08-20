@@ -11,7 +11,9 @@ import {
   query,
   orderBy
 } from "firebase/firestore";
+
 import { db } from "../js/firebase";
+import { useAuthStore } from "./auth";
 
 // Toast Notifications
 const $toast = useToast();
@@ -21,7 +23,8 @@ const toastOptions = {
 };
 
 // Get a reference to the notes collection
-const notesCollectionRef = collection(db, "notes");
+let notesCollectionRef, notesQuery;
+let unsubscribe = null;
 
 // Notes Store
 export const useNotesStore = defineStore("notes", {
@@ -30,25 +33,44 @@ export const useNotesStore = defineStore("notes", {
     notesLoaded: false
   }),
   actions: {
+    initializeDbRefs() {
+      const authStore = useAuthStore();
+
+      // Get a reference to the notes collection
+      notesCollectionRef = collection(db, "users", authStore.user.id, "notes");
+      notesQuery = query(notesCollectionRef, orderBy("timestamp", "desc"));
+      this.getNotes();
+    },
     // This action is used in App.vue to get all the notes from firestore
     getNotes() {
       this.notesLoaded = false;
-      const q = query(notesCollectionRef, orderBy("timestamp", "desc"));
-      onSnapshot(q, (querySnapshot) => {
+
+      unsubscribe = onSnapshot(notesQuery, (querySnapshot) => {
         const notesFromDb = [];
 
         querySnapshot.forEach((doc) => {
-          let note = {
-            id: doc.id,
-            content: doc.data().content,
-            lastModifiedDate: new Date(doc.data().timestamp.seconds * 1000)
-          };
+          // If the source of the snapshot is from cache, then don't add it to the notes array
+          // This is used because the value of timestamp will be null if the source is from cache
+          if (!doc.metadata.hasPendingWrites) {
+            let note = {
+              id: doc.id,
+              content: doc.data().content,
+              lastModifiedDate: new Date(doc.data().timestamp?.seconds * 1000)
+            };
 
-          notesFromDb.push(note);
+            notesFromDb.push(note);
+          }
         });
         this.notes = notesFromDb;
         this.notesLoaded = true;
       });
+    },
+    clearNotes() {
+      this.notes = [];
+      // Unsubscribe from the document snapshot events listener
+      if (unsubscribe) {
+        unsubscribe();
+      }
     },
     addNote(newNoteContent) {
       if (newNoteContent.trim() === "") {

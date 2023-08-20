@@ -55,6 +55,7 @@ const addNoteHandler = () => {
          class="notification is-warning is-light is-size-6 is-family-monospace has-text-centered py-6">No notes yet!
       Please add
       some
-      notes.</div>
+      notes.
+    </div>
   </div>
 </template>

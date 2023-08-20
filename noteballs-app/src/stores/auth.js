@@ -8,7 +8,7 @@ import {
 import { useToast } from "vue-toast-notification";
 
 import { auth } from "../js/firebase.js";
-import { useNotesStore } from "../stores/notes";
+import { useNotesStore } from "./notes";
 
 // Toast Notifications
 const $toast = useToast();
@@ -17,9 +17,6 @@ const toastOptions = {
   duration: 3000
 };
 
-// Notes Store
-//const notesStore = useNotesStore();
-
 // Auth Store
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -27,6 +24,8 @@ export const useAuthStore = defineStore("auth", {
   }),
   actions: {
     initAuth() {
+      const notesStore = useNotesStore();
+
       onAuthStateChanged(auth, (user) => {
         if (user) {
           // User is signed in
@@ -35,12 +34,13 @@ export const useAuthStore = defineStore("auth", {
           this.user.id = user.uid;
           this.user.email = user.email;
 
-          //notesStore.getNotes();
+          notesStore.initializeDbRefs();
 
           this.router.push("/");
         } else {
           // User is signed out
           this.user = {};
+          notesStore.clearNotes();
           console.log("User signed out");
           this.router.replace("/auth");
         }
